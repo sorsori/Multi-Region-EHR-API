@@ -98,6 +98,8 @@ To comply with **GDPR** and **FHIR** expectations, the design separates patient 
 * A research data lake (**S3**) populated via DynamoDB Streams.
 * **EventBridge**-based alerting (e.g., abnormal observations).
 * Support for alternative identifiers (e.g., passport numbers) to help match patients in emergencies.
+* **Resilience & Fault Tolerance:** Implement **Amazon SQS Dead Letter Queues (DLQs)** and automated retry policies for the Analysis service to ensure zero data loss during downstream processing failures.
+* **Performance Tuning:** Configure **Provisioned Concurrency** for the Search Lambda to eliminate cold starts, guaranteeing consistent low-latency lookups for clinicians during peak hours.
 
 ---
 
