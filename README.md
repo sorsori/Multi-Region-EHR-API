@@ -92,17 +92,52 @@ To comply with **GDPR** and **FHIR** expectations, the design separates patient 
 
 ---
 
-## 7. Future Work
+## 7. Production Readiness: Target Multi-Account Strategy
 
-* **QuickSight** dashboards with condition-specific clinical summaries.
-* A research data lake (**S3**) populated via DynamoDB Streams.
-* **EventBridge**-based alerting (e.g., abnormal observations).
-* Support for alternative identifiers (e.g., passport numbers) to help match patients in emergencies.
+### 7.1 Multi-Account Strategy (Security & Governance)
+While this prototype leverages **Multi-Region** isolation within a single AWS account for demonstration purposes, a real-world production deployment would utilize **AWS Organizations** to enforce strict account-level isolation.
+
+The following Organizational Unit (OU) structure ensures **GDPR compliance**, minimize **blast radius**, and enforce **Separation of Duties**:
+
+Root
+ ├── Security OU
+ │    ├── Security-Tooling (GuardDuty, Security Hub aggregation)
+ │    └── Incident-Response (Forensics environment)
+ │
+ ├── Log/Archive OU
+ │    └── Logs-Audit (Immutable CloudTrail & Config archives)
+ │
+ ├── Workloads OU (Isolated by Sovereignty)
+ │    ├── UK-Prod-Account
+ │    ├── DE-Prod-Account (Strict Data Residency)
+ │    ├── FR-Prod-Account
+ │    └── Shared-Network-Services (Transit Gateway / Direct Connect)
+ │
+ ├── Research OU
+ │    └── Research-Lake (De-identified data analysis)
+ │
+ └── Sandbox OU
+      └── Developer-Sandboxes
+
+### 7.2Application Hardening (Reliability & Performance)
+To meet enterprise SLAs, the following architectural enhancements are designed for the production release:
 * **Resilience & Fault Tolerance:** Implement **Amazon SQS Dead Letter Queues (DLQs)** and automated retry policies for the Analysis service to ensure zero data loss during downstream processing failures.
 * **Performance Tuning:** Configure **Provisioned Concurrency** for the Search Lambda to eliminate cold starts, guaranteeing consistent low-latency lookups for clinicians during peak hours.
 
 ---
 
-## 8. License
+## 8. Future Work
+
+* **Health Analytics:**  **Amazon QuickSight** dashboards visualising condition-specific clinical summaries across regions.
+
+* **Research Data Lake:** A secondary, anonymised data store in **S3** populated via DynamoDB Streams for medical research.
+
+* **Real-time Clinical Alerts:** **EventBridge** alerting system to notify clinicians of critical events (abnormal observation values, etc).
+
+* **Enhanced Identification:** Support for alternative identifiers (e.g. passport numbers) to facilitate patient matching in emergency scenarios.
+
+---
+
+## 9. License
 
 MIT
