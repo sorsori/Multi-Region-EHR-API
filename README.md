@@ -61,7 +61,7 @@ To comply with **GDPR** and **FHIR** expectations, the design separates patient 
 4.  If a match is found, the system fetches relevant clinical data from that country’s regional table.
 5.  Records are **merged in memory** and shown to the clinician. **Nothing is written centrally.**
 6.  When new notes are added, **DynamoDB Streams** trigger the **Analysis Lambda**, which uses services like **Comprehend Medical** to extract coded insights.
-7.  Clinicians will be able to view context-aware summaries in **QuickSight**—for example, highlighting history relevant to the patient’s current condition.
+7.  The frontend application aggregates these insights into a **visual clinical timeline**, allowing doctors to spot cross-border patterns (e.g., recurring symptoms) directly in the browser without persisting data centrally.
 
 ---
 
